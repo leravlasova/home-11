@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+
+//  Вам нужно написать функцию, которая в качестве параметра принимает
+//  функцию и добавляет ей возможность кешировать вызовы. Идея состоит в том, что 
+//  при вызове функции с одинаковыми аргументами, нет смысла вызывать функцию каждый раз, 
+//  достаточно сохранять данные о результатах вызова.
+
+// Хранить нужно последние 10 вызовов. (опционально)
+
+
+    const plus = (a, b) => a + b;
+
+    function simpleCache(fn) {
+        const cache = [];
+
+        return (...args) => {
+            const findArg = cache.find((item) => item.arguments.every((el, i) => el === args[i]));
+            const newCacheItem = {
+                arguments: args,
+                res: fn(...args)
+            };
+
+            if (findArg) {
+                return findArg.res;
+            }
+
+            if (cache.length >= 10) {
+                cache.splice(0, 1);
+                cache.push(newCacheItem);
+                return newCacheItem.res;
+            }
+
+            cache.push(newCacheItem);
+            return newCacheItem.res;
+        };
+    }
+
+    const baz = simpleCache(plus);
+
+    console.log(baz(5, 1));
+    console.log(baz(5, 1));
+    console.log(baz(3, 2));
+    console.log(baz(6, 6));
+    console.log(baz(3, 4));
+    console.log(baz(7, 5));
+    console.log(baz(3, 6));
+    console.log(baz(3, 7));
+    console.log(baz(3, 8));
+    console.log(baz(3, 9));
+    console.log(baz(6, 10));
+    console.log(baz(6, 11));
+    console.log(baz(6, 12));
+    console.log(baz(6, 12));
+
+
+
+
+    </script>
+</body>
+</html>
